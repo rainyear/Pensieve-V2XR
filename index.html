@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>V2XR | Way to XR</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.4.2/aframe.min.js"
+      integrity="sha512-rVwZ9RF3FKH6TH80cvAnWssdlHPvHfOFDXW0empc5E9gkzD1B7CiySJb4SCC8SgBILhTg7AFM8m3TR1wesZ6FQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/assets/js/shader-dream.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <meta name="author" content="v2xr" />
+    <meta
+      name="keywords"
+      content="visionOS, Apple Vision Pro, keyboard, THREE.js, WebXR"
+    />
+    <meta
+      name="description"
+      content="Recreated visionOS experiences using THREE.js and WebXR"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <a-scene>
+      <!-- MARK: Assets -->
+      <a-assets>
+        <img id="sky" src="/assets/imgs/env.jpg" preload="true" />
+        <audio
+          id="ambient"
+          src="/assets/sounds/ambient-wave.m4a"
+          preload="true"
+        />
+      </a-assets>
+
+      <!-- MARK: Camera -->
+      <a-entity
+        camera
+        look-controls
+        wasd-controls
+        position="0 1.6 0"
+        cursor="rayOrigin: mouse"
+      >
+      </a-entity>
+      <a-icosahedron
+        to-indexed-vertices
+        color="blue"
+        radius="2"
+        detail="40"
+        scale="0.1 0.1 0.1"
+        position="0 1.6 -0.7"
+        material="shader: dream"
+      ></a-icosahedron>
+
+      <!-- MARK: Skybox -->
+      <a-sky src="#sky" rotation="0 -50 0" />
+      <!-- MARK: Ambient Sound -->
+      <a-entity
+        id="ambientSound"
+        sound="src: #ambient; autoplay: false; loop: true; volume: 0.5"
+      />
+    </a-scene>
+
+    <script>
+      const sceneEl = document.querySelector("a-scene");
+      sceneEl.addEventListener("enter-vr", () => {
+        document.getElementById("ambientSound").components.sound.playSound();
+      });
+
+      AFRAME.registerComponent("to-indexed-vertices", {
+        init: function () {
+          var mesh = this.el.getObject3D("mesh");
+          var geometry = mesh.geometry;
+          toIndexedVertices(geometry);
+          //mesh.geometry = geometry;
+          //this.el.setObject3D("mesh", mesh);
+        },
+      });
+    </script>
+  </body>
+</html>
