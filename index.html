@@ -10,6 +10,7 @@
     ></script>
     <script src="/assets/js/shader-dream.js"></script>
     <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/info-panel.js"></script>
     <meta name="author" content="v2xr" />
     <meta
       name="keywords"
@@ -31,6 +32,21 @@
       <!-- MARK: Assets -->
       <a-assets>
         <img id="sky" src="/assets/imgs/env.jpg" preload="true" />
+        <img
+          id="info"
+          src="/assets/imgs/info.bubble.fill@2x.png"
+          preload="true"
+        />
+        <img
+          id="speaker"
+          src="/assets/imgs/speaker.slash.fill@2x.png"
+          preload="true"
+        />
+        <img
+          id="speaker-mute"
+          src="/assets/imgs/speaker.slash.fill_red@2x.png"
+          preload="true"
+        />
         <audio
           id="ambient"
           src="/assets/sounds/ambient-wave.m4a"
@@ -47,6 +63,10 @@
         cursor="rayOrigin: mouse"
       >
       </a-entity>
+      <a-entity
+        laser-controls="hand: right"
+        raycaster="objects: [btn]; lineOpacity: 0.5"
+      ></a-entity>
       <a-icosahedron
         to-indexed-vertices
         color="blue"
@@ -58,19 +78,50 @@
         animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear;"
       ></a-icosahedron>
 
+      <!-- MARK: Control panel -->
+      <a-entity position="2 3 -2">
+          <a-image id="btn-info" btn src="#info" width="0.15" height="0.15"></a-image>
+          <a-image
+            id="btn-mute"
+            btn
+            src="#speaker-mute"
+            width="0.15"
+            height="0.15"
+            position="-0.25 0 0"
+          /></a-image>
+      </a-entity>
+      <!-- MARK: Info panel -->
+      <a-entity info-panel ></a-entity>
+
       <!-- MARK: Skybox -->
       <a-sky src="#sky" rotation="0 -50 0" />
       <!-- MARK: Ambient Sound -->
       <a-entity
         id="ambientSound"
         sound="src: #ambient; autoplay: false; loop: true; volume: 0.5"
+        is-playing="false"
       />
     </a-scene>
 
     <script>
+      const toggleAmbientSound = () => {
+        const speaker = document.getElementById("btn-mute");
+        const ambientSound = document.getElementById("ambientSound");
+        if (ambientSound.getAttribute("is-playing") == "true") {
+          ambientSound.components.sound.pauseSound();
+          ambientSound.setAttribute("is-playing", "false");
+          speaker.setAttribute("src", "#speaker-mute");
+        } else {
+          ambientSound.components.sound.playSound();
+          ambientSound.setAttribute("is-playing", "true");
+          speaker.setAttribute("src", "#speaker");
+        }
+      }
+
       const sceneEl = document.querySelector("a-scene");
+
       sceneEl.addEventListener("enter-vr", () => {
-        document.getElementById("ambientSound").components.sound.playSound();
+        toggleAmbientSound();
       });
 
       AFRAME.registerComponent("to-indexed-vertices", {
@@ -78,8 +129,27 @@
           var mesh = this.el.getObject3D("mesh");
           var geometry = mesh.geometry;
           toIndexedVertices(geometry);
-          //mesh.geometry = geometry;
-          //this.el.setObject3D("mesh", mesh);
+        },
+      });
+
+      AFRAME.registerComponent("btn", {
+        init: function () {
+          var el = this.el;
+          el.addEventListener("mouseenter", function () {
+            el.setAttribute("scale", "1.2 1.2 1.2");
+          });
+          el.addEventListener("mouseleave", function () {
+            el.setAttribute("scale", "1 1 1");
+          });
+          el.addEventListener("click", function () {
+            if (el.id == "btn-info") {
+              // window.open("https://v2xr.com", "_blank");
+              // show info panel
+              console.log("Show info panel");
+            } else if (el.id == "btn-mute") {
+              toggleAmbientSound();
+            }
+          });
         },
       });
     </script>
