@@ -8,6 +8,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="/assets/js/shader-starnest.js"></script>
     <script src="/assets/js/shader-dream.js"></script>
     <script src="/assets/js/utils.js"></script>
     <script src="/assets/js/info-panel.js"></script>
@@ -31,7 +32,7 @@
     <a-scene>
       <!-- MARK: Assets -->
       <a-assets>
-        <img id="sky" src="/assets/imgs/env.jpg" preload="true" />
+        <!-- <img id="sky" src="/assets/imgs/env.jpg" preload="true" /> -->
         <img
           id="info"
           src="/assets/imgs/info.bubble.fill@2x.png"
@@ -67,6 +68,8 @@
         laser-controls="hand: right"
         raycaster="objects: [btn]; lineOpacity: 0.5"
       ></a-entity>
+
+      <!-- MARK: Shaders -->
       <a-icosahedron
         to-indexed-vertices
         color="blue"
@@ -77,6 +80,7 @@
         material="shader: dream"
         animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear;"
       ></a-icosahedron>
+      <a-entity id="sky" geometry="primitive: sphere; radius: 50" material="shader: starnest; side: back" ></a-entity>
 
       <!-- MARK: Control panel -->
       <a-entity position="2 3 -2">
@@ -94,7 +98,7 @@
       <a-entity info-panel ></a-entity>
 
       <!-- MARK: Skybox -->
-      <a-sky src="#sky" rotation="0 -50 0" />
+      <a-sky src="#sky" rotation="0 -50 0" visible="false"/>
       <!-- MARK: Ambient Sound -->
       <a-entity
         id="ambientSound"

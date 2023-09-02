@@ -1,3 +1,3 @@
-ARFRAME.registerComponent("info-panel", {
+AFRAME.registerComponent("info-panel", {
   init: function () {},
 });
