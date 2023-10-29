@@ -29,7 +29,7 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
   <body>
-    <a-scene>
+    <a-scene stats>
       <!-- MARK: Assets -->
       <a-assets>
         <!-- <img id="sky" src="/assets/imgs/env.jpg" preload="true" /> -->
@@ -52,7 +52,7 @@
           id="ambient"
           src="/assets/sounds/ambient-wave.m4a"
           preload="true"
-        />
+        ></audio>
       </a-assets>
 
       <!-- MARK: Camera -->
@@ -80,25 +80,37 @@
         material="shader: dream"
         animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear;"
       ></a-icosahedron>
-      <a-entity id="sky" geometry="primitive: sphere; radius: 50" material="shader: starnest; side: back" ></a-entity>
+      <a-entity
+        id="sky"
+        geometry="primitive: sphere; radius: 10"
+        material="shader: starnest; side: back"
+        position="0 1.6 0"
+        hide-on-enter-ar
+      ></a-entity>
 
       <!-- MARK: Control panel -->
       <a-entity position="2 3 -2">
-          <a-image id="btn-info" btn src="#info" width="0.15" height="0.15"></a-image>
-          <a-image
-            id="btn-mute"
-            btn
-            src="#speaker-mute"
-            width="0.15"
-            height="0.15"
-            position="-0.25 0 0"
-          /></a-image>
+        <a-image
+          id="btn-info"
+          btn
+          src="#info"
+          width="0.15"
+          height="0.15"
+        ></a-image>
+        <a-image
+          id="btn-mute"
+          btn
+          src="#speaker-mute"
+          width="0.15"
+          height="0.15"
+          position="-0.25 0 0"
+        ></a-image>
       </a-entity>
       <!-- MARK: Info panel -->
-      <a-entity info-panel ></a-entity>
+      <a-entity info-panel></a-entity>
 
       <!-- MARK: Skybox -->
-      <a-sky src="#sky" rotation="0 -50 0" visible="false"/>
+      <a-sky src="#sky" rotation="0 -50 0" visible="false" hide-on-enter-ar />
       <!-- MARK: Ambient Sound -->
       <a-entity
         id="ambientSound"
@@ -120,7 +132,7 @@
           ambientSound.setAttribute("is-playing", "true");
           speaker.setAttribute("src", "#speaker");
         }
-      }
+      };
 
       const sceneEl = document.querySelector("a-scene");
 
