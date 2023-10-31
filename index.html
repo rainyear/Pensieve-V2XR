@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>冥想盆 · Pensieve | V2XR</title>
+    <title>Pensieve | V2XR</title>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.4.2/aframe.min.js"
       integrity="sha512-rVwZ9RF3FKH6TH80cvAnWssdlHPvHfOFDXW0empc5E9gkzD1B7CiySJb4SCC8SgBILhTg7AFM8m3TR1wesZ6FQ=="
@@ -27,9 +27,21 @@
       content="upgrade-insecure-requests"
     />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script>
+      /*
+      TODO: 
+      - [] Add UI Buttons
+      - [] Shader Animation start & pause
+      - [] Add AR transparent dimming background
+      - [] User select background
+      - [] User select Shader 
+
+      animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear;"
+      */
+    </script>
   </head>
   <body>
-    <a-scene stats>
+    <a-scene>
       <!-- MARK: Assets -->
       <a-assets>
         <!-- <img id="sky" src="/assets/imgs/env.jpg" preload="true" /> -->
@@ -53,6 +65,12 @@
           src="/assets/sounds/ambient-wave.m4a"
           preload="true"
         ></audio>
+        <a-mixin
+          id="txt-btn"
+          text="width: 0.5; align: center"
+          material="color: #333; opacity: 0.5; transparent: true"
+          geometry="primitive: plane; width: 0.1; height: 0.1"
+        ></a-mixin>
       </a-assets>
 
       <!-- MARK: Camera -->
@@ -77,9 +95,9 @@
         detail="40"
         scale="0.1 0.1 0.1"
         position="0 1.6 -0.7"
-        material="shader: dream"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear;"
+        material="shader: dream; uTimeScaleVert: 0; uTimeScaleFrag: 0"
       ></a-icosahedron>
+      <!-- 
       <a-entity
         id="sky"
         geometry="primitive: sphere; radius: 10"
@@ -87,6 +105,7 @@
         position="0 1.6 0"
         hide-on-enter-ar
       ></a-entity>
+      -->
 
       <!-- MARK: Control panel -->
       <a-entity position="2 3 -2">
@@ -110,19 +129,67 @@
       <a-entity info-panel></a-entity>
 
       <!-- MARK: Skybox -->
-      <a-sky src="#sky" rotation="0 -50 0" visible="false" hide-on-enter-ar />
+      <a-sky material="color: green; opacity: 0.75; transparent: true"></a-sky>
       <!-- MARK: Ambient Sound -->
       <a-entity
         id="ambientSound"
         sound="src: #ambient; autoplay: false; loop: true; volume: 0.5"
         is-playing="false"
       />
+      <!-- Control UI -->
+      <a-plane
+        visible="true"
+        id="timer-control"
+        height="0.1"
+        width="0.5"
+        rotation="-15 0 0"
+        material="color: #333; opacity: 0.75; transparent: true"
+        position="-0.1 1.2 -0.5"
+      >
+        <a-text
+          id="5mins"
+          value="5 mins"
+          mixin="txt-btn"
+          position="-0.18 0 0.01"
+          btn
+        ></a-text>
+        <a-text
+          id="10mins"
+          value="10 mins"
+          mixin="txt-btn"
+          position="-0.06 0 0.01"
+          btn
+        ></a-text>
+        <a-text
+          id="15mins"
+          value="15 mins"
+          mixin="txt-btn"
+          position="0.06 0 0.01"
+          btn
+        ></a-text>
+        <a-text
+          id="20mins"
+          value="20 mins"
+          mixin="txt-btn"
+          position="0.18 0 0.01"
+          btn
+        ></a-text>
+        <a-text
+          id="start"
+          value="START"
+          mixin="txt-btn"
+          btn
+          position="0.35 0 0.01"
+          geometry="primitive: circle; radius: 0.05"
+        ></a-text>
+      </a-plane>
     </a-scene>
 
     <script>
       const toggleAmbientSound = () => {
         const speaker = document.getElementById("btn-mute");
         const ambientSound = document.getElementById("ambientSound");
+
         if (ambientSound.getAttribute("is-playing") == "true") {
           ambientSound.components.sound.pauseSound();
           ambientSound.setAttribute("is-playing", "false");
@@ -137,6 +204,8 @@
       const sceneEl = document.querySelector("a-scene");
 
       sceneEl.addEventListener("enter-vr", () => {
+        const timerControl = document.getElementById("timer-control");
+        timerControl.setAttribute("visible", true);
         toggleAmbientSound();
       });
 
@@ -158,12 +227,15 @@
             el.setAttribute("scale", "1 1 1");
           });
           el.addEventListener("click", function () {
-            if (el.id == "btn-info") {
+            const elID = el.id;
+            if (elID === "btn-info") {
               // window.open("https://v2xr.com", "_blank");
               // show info panel
               console.log("Show info panel");
-            } else if (el.id == "btn-mute") {
+            } else if (elID === "btn-mute") {
               toggleAmbientSound();
+            } else if (elID.endsWith("mins")) {
+              console.log(el.getAttribute("value"));
             }
           });
         },
