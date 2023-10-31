@@ -89,6 +89,7 @@
 
       <!-- MARK: Shaders -->
       <a-icosahedron
+        id="meditation-vis"
         to-indexed-vertices
         color="blue"
         radius="2"
@@ -97,7 +98,6 @@
         position="0 1.6 -0.7"
         material="shader: dream; uTimeScaleVert: 0; uTimeScaleFrag: 0"
       ></a-icosahedron>
-      <!-- 
       <a-entity
         id="sky"
         geometry="primitive: sphere; radius: 10"
@@ -105,7 +105,6 @@
         position="0 1.6 0"
         hide-on-enter-ar
       ></a-entity>
-      -->
 
       <!-- MARK: Control panel -->
       <a-entity position="2 3 -2">
@@ -129,7 +128,12 @@
       <a-entity info-panel></a-entity>
 
       <!-- MARK: Skybox -->
-      <a-sky material="color: green; opacity: 0.75; transparent: true"></a-sky>
+      <!--
+      <a-sky
+        material="color: #333; opacity: 0.85; transparent: true; side: double"
+        hide-on-enter-ar
+      ></a-sky>
+      -->
       <!-- MARK: Ambient Sound -->
       <a-entity
         id="ambientSound"
@@ -148,13 +152,16 @@
       >
         <a-text
           id="5mins"
+          class="timer-value"
           value="5 mins"
           mixin="txt-btn"
+          material="color: #fff"
           position="-0.18 0 0.01"
           btn
         ></a-text>
         <a-text
           id="10mins"
+          class="timer-value"
           value="10 mins"
           mixin="txt-btn"
           position="-0.06 0 0.01"
@@ -162,6 +169,7 @@
         ></a-text>
         <a-text
           id="15mins"
+          class="timer-value"
           value="15 mins"
           mixin="txt-btn"
           position="0.06 0 0.01"
@@ -169,6 +177,7 @@
         ></a-text>
         <a-text
           id="20mins"
+          class="timer-value"
           value="20 mins"
           mixin="txt-btn"
           position="0.18 0 0.01"
@@ -186,6 +195,16 @@
     </a-scene>
 
     <script>
+      const DEFAULT_DURATION = 5;
+      const timerEls = document.querySelectorAll(".timer-value");
+      const startBtn = document.getElementById("start");
+      const _Meditation_State = {
+        ing: false,
+        duration: DEFAULT_DURATION, // default 5 mins
+        el: document.getElementById("meditation-vis"),
+        timeoutControl: null,
+        intervalControl: null,
+      };
       const toggleAmbientSound = () => {
         const speaker = document.getElementById("btn-mute");
         const ambientSound = document.getElementById("ambientSound");
@@ -200,13 +219,81 @@
           speaker.setAttribute("src", "#speaker");
         }
       };
+      function countdown(minutes, seconds) {
+        let totalSeconds = minutes * 60 + seconds;
+        let interval = setInterval(() => {
+          if (totalSeconds <= 0) {
+            clearInterval(interval);
+            console.log("倒计时结束！");
+          } else {
+            let minutes = Math.floor(totalSeconds / 60);
+            let seconds = totalSeconds % 60;
+            console.log(`${minutes} 分 ${seconds} 秒`);
+            startBtn.setAttribute("value", `${minutes} : ${seconds}`);
+            totalSeconds--;
+          }
+        }, 1000);
+        return interval;
+      }
+      const startMeditation = () => {
+        console.log("Start Meditation");
+        _Meditation_State.ing = true;
+        // TODO: Change STOP to count down
+        // startBtn.setAttribute("value", "STOP");
+
+        _Meditation_State.intervalControl = countdown(
+          _Meditation_State.duration - 1,
+          59
+        );
+
+        startBtn.setAttribute("material", { color: "#f00" });
+        toggleAmbientSound();
+        _Meditation_State.el.setAttribute("material", {
+          shader: "dream",
+          uTimeScaleVert: 0.001,
+          uTimeScaleFrag: 0.0005,
+        });
+        _Meditation_State.el.setAttribute("animation", {
+          property: "rotation",
+          to: "0 360 0",
+          loop: true,
+          dur: 10000,
+          easing: "linear",
+        });
+        _Meditation_State.timeoutControl = setTimeout(() => {
+          stopMeditation();
+        }, _Meditation_State.duration * 1000 * 60);
+      };
+      const stopMeditation = () => {
+        console.log("Stop Meditation");
+        startBtn.setAttribute("value", "START");
+        startBtn.setAttribute("material", { color: "#333" });
+        toggleAmbientSound();
+
+        if (_Meditation_State.timeoutControl) {
+          clearTimeout(_Meditation_State.timeoutControl);
+        }
+        if (_Meditation_State.intervalControl) {
+          clearInterval(_Meditation_State.intervalControl);
+        }
+
+        _Meditation_State.el.setAttribute("material", {
+          shader: "dream",
+          uTimeScaleVert: 0,
+          uTimeScaleFrag: 0,
+        });
+        _Meditation_State.el.removeAttribute("animation");
+
+        _Meditation_State.ing = false;
+        // _Meditation_State.duration = DEFAULT_DURATION;
+      };
 
       const sceneEl = document.querySelector("a-scene");
 
       sceneEl.addEventListener("enter-vr", () => {
         const timerControl = document.getElementById("timer-control");
         timerControl.setAttribute("visible", true);
-        toggleAmbientSound();
+        // toggleAmbientSound();
       });
 
       AFRAME.registerComponent("to-indexed-vertices", {
@@ -234,8 +321,26 @@
               console.log("Show info panel");
             } else if (elID === "btn-mute") {
               toggleAmbientSound();
+            } else if (elID === "start") {
+              // Start Meditation
+              if (_Meditation_State.ing) {
+                stopMeditation();
+              } else {
+                startMeditation();
+              }
             } else if (elID.endsWith("mins")) {
-              console.log(el.getAttribute("value"));
+              // Set Meditation Duration
+              const duration = parseInt(elID.split("mins")[0]);
+              _Meditation_State.duration = duration;
+              console.log(_Meditation_State);
+              for (let i = 0; i < timerEls.length; i++) {
+                const timerEl = timerEls[i];
+                if (timerEl.id === elID) {
+                  timerEl.setAttribute("material", { color: "#fff" });
+                } else {
+                  timerEl.setAttribute("material", { color: "#333" });
+                }
+              }
             }
           });
         },
