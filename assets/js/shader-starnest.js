@@ -28,7 +28,7 @@ AFRAME.registerShader("starnest", {
   
   #define zoom   0.200
   #define tile   2.850
-  #define speed  0.00005 
+  #define speed  0.00001 
   
   #define brightness 0.0015
   #define darkmatter 0.300

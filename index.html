@@ -183,19 +183,21 @@
           position="0.18 0 0.01"
           btn
         ></a-text>
-        <a-text
-          id="start"
-          value="START"
-          mixin="txt-btn"
-          btn
-          position="0.35 0 0.01"
-          geometry="primitive: circle; radius: 0.05"
-        ></a-text>
       </a-plane>
+      <a-text
+        id="start"
+        value="START"
+        mixin="txt-btn"
+        btn
+        position="0.25 1.23 -0.45"
+        rotation="-15 0 0"
+        geometry="primitive: circle; radius: 0.05"
+      ></a-text>
     </a-scene>
 
     <script>
       const DEFAULT_DURATION = 5;
+      const timerControl = document.getElementById("timer-control");
       const timerEls = document.querySelectorAll(".timer-value");
       const startBtn = document.getElementById("start");
       const _Meditation_State = {
@@ -238,8 +240,8 @@
       const startMeditation = () => {
         console.log("Start Meditation");
         _Meditation_State.ing = true;
-        // TODO: Change STOP to count down
-        // startBtn.setAttribute("value", "STOP");
+
+        timerControl.setAttribute("visible", false);
 
         _Meditation_State.intervalControl = countdown(
           _Meditation_State.duration - 1,
@@ -247,6 +249,14 @@
         );
 
         startBtn.setAttribute("material", { color: "#f00" });
+        startBtn.setAttribute("animation", {
+          property: "position",
+          to: "0 1.23 -0.45",
+          loop: false,
+          dur: 500,
+          easing: "easeOutBack",
+        });
+
         toggleAmbientSound();
         _Meditation_State.el.setAttribute("material", {
           shader: "dream",
@@ -260,14 +270,13 @@
           dur: 10000,
           easing: "linear",
         });
+        // count down duration
         _Meditation_State.timeoutControl = setTimeout(() => {
           stopMeditation();
         }, _Meditation_State.duration * 1000 * 60);
       };
       const stopMeditation = () => {
         console.log("Stop Meditation");
-        startBtn.setAttribute("value", "START");
-        startBtn.setAttribute("material", { color: "#333" });
         toggleAmbientSound();
 
         if (_Meditation_State.timeoutControl) {
@@ -283,16 +292,24 @@
           uTimeScaleFrag: 0,
         });
         _Meditation_State.el.removeAttribute("animation");
-
         _Meditation_State.ing = false;
-        // _Meditation_State.duration = DEFAULT_DURATION;
+
+        timerControl.setAttribute("visible", true);
+        startBtn.setAttribute("value", "START");
+        startBtn.setAttribute("material", { color: "#333" });
+        startBtn.setAttribute("animation", {
+          property: "position",
+          to: "0.25 1.25 -0.45",
+          loop: false,
+          dur: 500,
+          easing: "easeOutBack",
+        });
       };
 
       const sceneEl = document.querySelector("a-scene");
 
       sceneEl.addEventListener("enter-vr", () => {
-        const timerControl = document.getElementById("timer-control");
-        timerControl.setAttribute("visible", true);
+        //timerControl.setAttribute("visible", true);
         // toggleAmbientSound();
       });
 
