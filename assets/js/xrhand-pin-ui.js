@@ -3,6 +3,7 @@
 const JOINTS_LEN = 25;
 const INDEX_TIP_INDEX = 9;
 const THUMB_TIP_INDEX = 4;
+const WRIST_INDEX = 0;
 
 AFRAME.registerComponent("xrhand-pin-ui", {
   schema: {
@@ -15,11 +16,13 @@ AFRAME.registerComponent("xrhand-pin-ui", {
     this.handTrackingComponent = this.el.components["hand-tracking-controls"];
 
     this.indexTipPosition = new THREE.Vector3();
+    this.thumbTipPosition = new THREE.Vector3();
+    this.wristRotation = new THREE.Quaternion();
 
     this.hasPoses = false;
     this.jointPoses = new Float32Array(16 * JOINTS_LEN);
     this.jointRadii = new Float32Array(JOINTS_LEN);
-    this.indexSpere = this.addSphere();
+    this.addSphere();
   },
 
   tick: function () {
@@ -39,15 +42,33 @@ AFRAME.registerComponent("xrhand-pin-ui", {
     }
   },
   addSphere: function () {
-    var sphere = document.createElement("a-sphere");
-    sphere.setAttribute("radius", 0.01);
-    sphere.setAttribute("color", "red");
-    sphere.setAttribute("position", [100, 100, 100]);
-    this.el.appendChild(sphere);
-    return sphere;
+    this.indexSphere = document.createElement("a-sphere");
+    this.indexSphere.setAttribute("radius", 0.01);
+    this.indexSphere.setAttribute("color", "red");
+    this.indexSphere.setAttribute("position", [100, 100, 100]);
+    this.el.appendChild(this.indexSphere);
+
+    this.thumbSphere = document.createElement("a-sphere");
+    this.thumbSphere.setAttribute("radius", 0.01);
+    this.thumbSphere.setAttribute("color", "green");
+    this.thumbSphere.setAttribute("position", [100, 100, 100]);
+    this.el.appendChild(this.thumbSphere);
+
+    this.fingerLine = document.createElement("a-entity");
+    this.fingerLine.setAttribute("line", {
+      start: { x: 0, y: 0, z: 0 },
+      end: { x: 0, y: 0, z: 0 },
+      color: "green",
+    });
+    this.el.appendChild(this.fingerLine);
   },
-  updateSphere: function (position) {
-    this.indexSpere.setAttribute("position", position);
+  updateSphere: function () {
+    this.indexSphere.setAttribute("position", this.indexTipPosition);
+    this.thumbSphere.setAttribute("position", this.thumbTipPosition);
+    this.fingerLine.setAttribute("line", {
+      start: this.indexTipPosition,
+      end: this.thumbTipPosition,
+    });
   },
   detectGesture: function () {
     this.detectLookingAtHand();
@@ -59,22 +80,29 @@ AFRAME.registerComponent("xrhand-pin-ui", {
     }
 
     var jointPose = new THREE.Matrix4();
-    var indexTipPosition = this.handTrackingComponent.indexTipPosition;
-    var thumbTipPosition = new THREE.Vector3();
+    // var indexTipPosition = this.handTrackingComponent.indexTipPosition;
+    // var thumbTipPosition = this.thumbTipPosition;
 
-    indexTipPosition.setFromMatrixPosition(
+    this.wristRotation.setFromRotationMatrix(
+      jointPose.fromArray(
+        this.handTrackingComponent.jointPoses,
+        WRIST_INDEX * 16
+      )
+    );
+
+    this.indexTipPosition.setFromMatrixPosition(
       jointPose.fromArray(
         this.handTrackingComponent.jointPoses,
         INDEX_TIP_INDEX * 16
       )
     );
-    thumbTipPosition.setFromMatrixPosition(
+    this.thumbTipPosition.setFromMatrixPosition(
       jointPose.fromArray(
         this.handTrackingComponent.jointPoses,
         THUMB_TIP_INDEX * 16
       )
     );
 
-    this.updateSphere(thumbTipPosition);
+    this.updateSphere();
   },
 });
