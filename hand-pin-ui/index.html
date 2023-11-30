@@ -35,8 +35,17 @@
         position="0 1.6 0"
         cursor="rayOrigin: mouse"
       >
+        <a-entity
+          cursor="fuse: true; fuseTimeout: 500"
+          position="0 0 -1"
+          geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+          material="color: black; shader: flat"
+        >
+        </a-entity>
       </a-entity>
-      <a-entity id="leftHand" xrhand-pin-ui="hand: left;"></a-entity>
+      <a-entity id="leftHand" xrhand-pin-ui="hand: left;">
+        <a-text value="TEST"></a-text>
+      </a-entity>
       <a-entity id="rightHand" xrhand-pin-ui="hand: right;"></a-entity>
       <a-box
         id="box"
