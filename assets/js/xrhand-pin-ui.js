@@ -5,6 +5,8 @@ const INDEX_TIP_INDEX = 9;
 const THUMB_TIP_INDEX = 4;
 const MIDDLE_TIP_INDEX = 14;
 const WRIST_INDEX = 10;
+const METACARPAL = 10;
+const PROXIMAL_PHALANX = 11;
 
 AFRAME.registerComponent("xrhand-pin-ui", {
   schema: {
