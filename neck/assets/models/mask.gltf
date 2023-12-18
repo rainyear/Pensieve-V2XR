@@ -1,0 +1,231 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 5045,
+      "max": [
+        12.55124282836914,
+        4.686858177185059,
+        -0.3949166536331177
+      ],
+      "min": [
+        9.875842094421387,
+        0.7682284116744995,
+        -1.7188938856124878
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 60540,
+      "componentType": 5126,
+      "count": 5045,
+      "max": [
+        0.9877285957336426,
+        0.9999954700469971,
+        0.9999962449073792
+      ],
+      "min": [
+        -0.9875080585479736,
+        -0.9996929168701172,
+        -0.9911816120147705
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 5045,
+      "max": [
+        1.0010182857513428,
+        1.0
+      ],
+      "min": [
+        -2.9802322387695313e-08,
+        -1.703303387223798e-09
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 19560,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Karan Sahu (https://sketchfab.com/cgkaran)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/iron-man-mask-37c3994d7ab342a3a8eb7e43f95cbd2e",
+      "title": "Iron Man - Mask"
+    },
+    "generator": "Sketchfab-12.66.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 78240,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 40360,
+      "byteOffset": 78240,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 121080,
+      "byteOffset": 118600,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 239680,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_clearcoat"
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatFactor": 1.0,
+          "clearcoatRoughnessFactor": 0.04
+        }
+      },
+      "name": "blinn1",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          1.0,
+          0.6373,
+          0.0,
+          1.0
+        ],
+        "roughnessFactor": 0.9207483815999999
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "polySurface25_blinn1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        0.15882709622383118,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.5266699832410526e-17,
+        -0.15882709622383118,
+        0.0,
+        0.0,
+        0.15882709622383118,
+        3.5266699832410526e-17,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "ca9f2978ecce46518b5b28816f2f9acc.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        2.202009439468384,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.202009439468384,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.202009439468384,
+        0.0,
+        -13.478767395019531,
+        7.680782318115234,
+        1.2694191932678223,
+        1.0
+      ],
+      "name": "polySurface25"
+    },
+    {
+      "mesh": 0,
+      "name": "polySurface25_blinn1_0"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}

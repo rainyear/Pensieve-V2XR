@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>「接头」霸王 | V2XR</title>
+    <!-- <script src="/assets/js/aframe.1.4.2.min.js"></script> -->
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
+    <script src="/assets/js/shader.js"></script>
+
+    <meta name="author" content="v2xr" />
+    <meta
+      name="keywords"
+      content="WebXR, A-Frame, Virtual Reality, Augmented Reality, Mixed Reality, 3D, 360, VR, AR, MR, WebGL"
+    />
+    <meta
+      name="description"
+      content="Simple WebXR template project build with A-Frame."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script>
+      const envPresets = [
+        "contact",
+        "egypt",
+        "checkerboard",
+        "forest",
+        "goaland",
+        "yavapai",
+        "goldmine",
+        "threetowers",
+        "poison",
+        "arches",
+        "tron",
+        "japan",
+        "dream",
+        "volcano",
+        "starry",
+        "osiris",
+        "moon",
+      ];
+      function changeEnv() {
+        var envs = _shuffle(envPresets);
+        console.log("asdfs");
+        document
+          .querySelector("[environment]")
+          .setAttribute("environment", { preset: envs[0] });
+      }
+    </script>
+  </head>
+  <body>
+    <a-scene loading-screen="dotsColor: red; backgroundColor: black">
+      <a-assets>
+        <a-asset-item id="mask" src="/assets/models/mask.gltf"></a-asset-item>
+        <audio
+          id="success"
+          src="/assets/audio/success.m4a"
+          preload="auto"
+          crossorigin="anonymous"
+        ></audio>
+        <audio
+          id="fail"
+          src="/assets/audio/error.m4a"
+          preload="auto"
+          crossorigin="anonymous"
+        ></audio>
+        <audio
+          id="bgm"
+          src="/assets/audio/acid-beat-47629.mp3"
+          preload="auto"
+          crossorigin="anonymous"
+        ></audio>
+      </a-assets>
+
+      <!-- <a-sky src="#sky" hide-on-enter-ar></a-sky> -->
+      <!-- <a-entity environment="preset:dream" hide-on-enter-ar></a-entity> -->
+      <!--
+      <a-entity
+        light="type: ambient; color: #FFF; intensity: 2.5"
+        position="0 1.6 0"
+      ></a-entity>
+      <a-entity
+        light="type: directional; intensity: 1.75; distance: 50; decay: 1; castShadow: true; color: #FFF"
+        position="0 1 .5"
+      ></a-entity>
+      -->
+      <a-entity
+        camera
+        look-controls
+        wasd-controls
+        cursor="rayOrigin: mouse"
+        raycaster="objects: [clickable]"
+        position="0 1.6 0"
+        rotation-reader
+      >
+        <!-- <a-sphere
+          shadow="cast: true; receive: true"
+          radius="0.2"
+          segments-height="64"
+          segments-width="64"
+          scale="0.75 1 1"
+        ></a-sphere> -->
+      </a-entity>
+      <a-entity
+        laser-controls="hand: right"
+        raycaster="objects: [clickable]"
+      ></a-entity>
+      <a-entity
+        laser-controls="hand: left"
+        raycaster="objects: [clickable]"
+      ></a-entity>
+
+      <a-box
+        room
+        hide-on-enter-ar
+        visible="true"
+        width="8"
+        height="5"
+        depth="12"
+        position="0 2.5 0"
+        material="shader:wall-shader;transparent: true;side:back;"
+      ></a-box>
+
+      <!-- 
+      <a-plane
+        height="5"
+        width="8"
+        position="0 2.5 -5.9"
+        material="shader:wall-shader; transparent: true;"
+      ></a-plane>
+      -->
+
+      <a-entity
+        id="model-mask"
+        position="0 1.5 -4"
+        rotation="0 0 0"
+        visible="false"
+        animation__click="property: position; to: 0 1.5 0; dur: 2500; easing: linear; startEvents: gametick"
+      >
+        <a-light
+          type="point"
+          color="white"
+          position="0 0.5 0.5"
+          intensity="1.5"
+        ></a-light>
+        <a-gltf-model
+          id="model-mask"
+          visible="true"
+          src="#mask"
+          scale="0.5 0.5 0.5"
+          position="-1 -.5 0"
+        ></a-gltf-model>
+      </a-entity>
+
+      <a-entity rotation="-25 0 0" position="0 1.6 -0.45" control-panel>
+        <a-plane
+          color="black"
+          startgame-btn
+          visible="true"
+          clickable
+          width="0.15"
+          height="0.075"
+        >
+          <a-text value="Start Game" width="0.5" color="white" align="center" />
+        </a-plane>
+        <a-plane
+          clickable
+          color="black"
+          position="0 -0.05 0"
+          width="0.15"
+          height="0.02"
+          onclick="changeEnv();"
+        >
+          <a-text
+            value="Change Environment"
+            width="0.2"
+            color="white"
+            align="center"
+          />
+        </a-plane>
+        <a-plane
+          clickable
+          position="0 -0.073 0"
+          width="0.15"
+          height="0.02"
+          color="black"
+        >
+          <a-text value="By: V2XR" width="0.2" color="white" align="center" />
+        </a-plane>
+      </a-entity>
+      <!-- <a-entity
+        visible="false"
+        wall="direction: right"
+        clickable
+        position="0 2 -4"
+        width="4"
+        height="2.5"
+        animation__click="property: position; to: 0 2 0.1; dur: 2000; easing: linear; startEvents: click"
+      >
+        <a-circle
+          radius="0.4"
+          scale="0.85 1 1"
+          position="0 -0.5 0.4"
+        ></a-circle>
+        <a-plane
+          clickable
+          width="4"
+          height="1.5"
+          rotation="5 0 0"
+          material="shader:wall-shader; transparent: true; "
+          shadow="cast: true; receive: true"
+        ></a-plane>
+      </a-entity> -->
+      <a-entity sounds visible="false">
+        <a-entity
+          id="sound-bgm"
+          sound="src: #bgm;autoplay: false; loop: true; volume: 0.5"
+        ></a-entity>
+        <a-entity id="sound-success" sound="src: #success"></a-entity>
+        <a-entity id="sound-missed" sound="src: #fail"></a-entity>
+      </a-entity>
+    </a-scene>
+
+    <script src="/assets/js/game.js"></script>
+  </body>
+</html>
