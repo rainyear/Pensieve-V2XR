@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+  <title>WWDC24 visionOS 2 WebXR</title>
+</head>
+<body>
+  <picture>
+    <source srcset="/assets/imgs/spatial_girl.heic" type="image/heic" />
+    <img
+      style="max-width: 400px; border-radius: 8px"
+      src="/assets/imgs/spatial_girl.jpg"
+      id="spatialGirl"
+      alt="Spatial Girl"
+    />
+  </picture>
+
+  <script>
+    let target = document.querySelector("#spatialGirl");
+
+    target.addEventListener("click", (event) => {
+      try {
+        target.requestFullscreen();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  </script>
+</body>
