@@ -45,19 +45,25 @@
     <hr />
     <h3>Web Speech Demo</h3>
     <div style="max-width: 400px">
-      <textarea id="speechResult" placeholder="语音识别结果…"></textarea>
-      <button onclick="startSpeechRecognition()">开始语音识别</button>
-      <button class="secondary" onclick="stopSpeechRecognition()">
-        停止识别
-      </button>
+      <div
+        id="colorBlock"
+        style="
+          width: 150px;
+          height: 150px;
+          border-radius: 8px;
+          background-color: gray;
+          margin: 16px auto;
+        "
+      ></div>
+      <button onclick="startSpeechRecognition()">开始</button>
+      <button class="secondary" onclick="stopSpeechRecognition()">停止</button>
     </div>
   </main>
   <!-- Footer -->
   <footer class="container">
     <small
       >Built with ❤️ by
-      <a href="/">
-        <img src="/assets/imgs/v2xr_new.png" width="45px" /> </a
+      <a href="/"> <img src="/assets/imgs/v2xr_new.png" width="45px" /> </a
     ></small>
   </footer>
   <!-- ./ Footer -->
@@ -75,14 +81,25 @@
     var rec = new webkitSpeechRecognition();
     rec.lang = "zh-CN";
     rec.continuous = true;
-    var result = document.querySelector("#speechResult");
+    var result = document.getElementById("colorBlock");
+
+    const COLORS = {
+      红: "red",
+      绿: "green",
+      蓝: "blue",
+      黑: "black",
+    };
 
     rec.onresult = (event) => {
       const last = event.results.length - 1;
-      const color = event.results[last][0].transcript;
-      console.log(`${color}`);
+      const color = event.results[last][0].transcript[0];
+
+      if (COLORS[color] != undefined) {
+        result.style.backgroundColor = COLORS[color];
+      }
+
+      console.log(`${color[0]}`);
       console.log(`Confidence: ${event.results[last][0].confidence}`);
-      result.innerHTML = color;
     };
 
     function startSpeechRecognition() {
