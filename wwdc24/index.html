@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <head>
   <title>WWDC24 visionOS 2 WebXR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="upgrade-insecure-requests"
+  />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
+  />
+  <link rel="stylesheet" type="text/css" href="/assets/css/style.css" />
 </head>
 <body>
-  <picture>
-    <source srcset="/assets/imgs/spatial_girl.heic" type="image/heic" />
-    <img
-      style="max-width: 400px; border-radius: 8px"
-      src="/assets/imgs/spatial_girl.jpg"
-      id="spatialGirl"
-      alt="Spatial Girl"
-    />
-  </picture>
+  <main class="container">
+    <h3>空间照片 Web Demo</h3>
+    <picture>
+      <source srcset="/assets/imgs/spatial_girl.heic" type="image/heic" />
+      <img
+        style="max-width: 400px; border-radius: 8px"
+        src="/assets/imgs/spatial_girl.jpg"
+        id="spatialGirl"
+        alt="Spatial Girl"
+      />
+    </picture>
+  </main>
 
   <script>
     let target = document.querySelector("#spatialGirl");
