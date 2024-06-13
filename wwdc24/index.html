@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <head>
   <title>WWDC24 visionOS 2 WebXR</title>
+  <meta name="keywords" content="visionOS, Apple Vision Pro, WWDC, WebXR" />
+  <meta
+    name="description"
+    content="探索如何在网页上充分利用 visionOS 的功能。了解最近的更新，例如选中内容突出显示功能的改进，以及全屏显示空间照片和全景图像的功能。学习如何利用现有的网页标准，以通过WebSpeech 构建听写和文本转语音功能、通过 WebAudio 创建空间音景，以及通过WebXR实现沉浸式体验。"
+  />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     http-equiv="Content-Security-Policy"
@@ -25,6 +30,15 @@
         alt="Spatial Girl"
       />
     </picture>
+    <hr />
+    <h3>Web Speech Demo</h3>
+    <div style="max-width: 400px">
+      <textarea id="speechResult" placeholder="语音识别结果…"></textarea>
+      <button onclick="startSpeechRecognition()">开始语音识别</button>
+      <button class="secondary" onclick="stopSpeechRecognition()">
+        停止识别
+      </button>
+    </div>
   </main>
   <!-- Footer -->
   <footer class="container">
@@ -41,5 +55,26 @@
         console.error(error);
       }
     });
+
+    var rec = new webkitSpeechRecognition();
+    rec.lang = "zh-CN";
+    rec.continuous = true;
+    var result = document.querySelector("#speechResult");
+
+    rec.onresult = (event) => {
+      const last = event.results.length - 1;
+      const color = event.results[last][0].transcript;
+      console.log(`${color}`);
+      console.log(`Confidence: ${event.results[last][0].confidence}`);
+      result.innerHTML = color;
+    };
+
+    function startSpeechRecognition() {
+      rec.start();
+    }
+    function stopSpeechRecognition() {
+      rec.stop();
+      result.innerHTML = "";
+    }
   </script>
 </body>
