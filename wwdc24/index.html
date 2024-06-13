@@ -70,11 +70,17 @@
     };
 
     function startSpeechRecognition() {
+      let utterance = new SpeechSynthesisUtterance("正在识别语音");
+
+      speechSynthesis.speak(utterance);
       rec.start();
     }
     function stopSpeechRecognition() {
       rec.stop();
       result.innerHTML = "";
+      let utterance = new SpeechSynthesisUtterance("已停止识别");
+
+      speechSynthesis.speak(utterance);
     }
   </script>
 </body>
