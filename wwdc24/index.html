@@ -20,16 +20,28 @@
 </head>
 <body>
   <main class="container">
-    <h3>空间照片 Web Demo</h3>
-    <picture>
-      <source srcset="/assets/imgs/spatial_girl.heic" type="image/heic" />
-      <img
-        style="max-width: 400px; border-radius: 8px"
-        src="/assets/imgs/spatial_girl.jpg"
-        id="spatialGirl"
-        alt="Spatial Girl"
-      />
-    </picture>
+    <h3>Spatial Photos Web Demo</h3>
+    <div>
+      <picture>
+        <source srcset="/assets/imgs/spatial_girl.heic" type="image/heic" />
+        <img
+          style="max-height: 300px; border-radius: 8px"
+          src="/assets/imgs/spatial_girl.jpg"
+          class="spatialPhoto"
+          alt="Spatial Girl"
+        />
+      </picture>
+      <picture>
+        <source srcset="/assets/imgs/spatial_girl2.heic" type="image/heic" />
+        <img
+          style="max-height: 300px; border-radius: 8px"
+          src="/assets/imgs/spatial_girl2.jpg"
+          class="spatialPhoto"
+          alt="Another Spatial Girl"
+        />
+      </picture>
+    </div>
+    <span><small> Source: Unsplash </small></span>
     <hr />
     <h3>Web Speech Demo</h3>
     <div style="max-width: 400px">
@@ -42,20 +54,24 @@
   </main>
   <!-- Footer -->
   <footer class="container">
-    <small>Built with ❤️ by <a href="/">V2XR</a></small>
+    <small
+      >Built with ❤️ by
+      <a href="/">
+        <img src="/assets/imgs/v2xr_new.png" width="45px" /> </a
+    ></small>
   </footer>
   <!-- ./ Footer -->
   <script>
-    let target = document.querySelector("#spatialGirl");
-
-    target.addEventListener("click", (event) => {
-      try {
-        target.requestFullscreen();
-      } catch (error) {
-        console.error(error);
-      }
+    let targets = document.querySelectorAll(".spatialPhoto");
+    targets.forEach((el) => {
+      el.addEventListener("click", (event) => {
+        try {
+          el.requestFullscreen();
+        } catch (error) {
+          console.error(error);
+        }
+      });
     });
-
     var rec = new webkitSpeechRecognition();
     rec.lang = "zh-CN";
     rec.continuous = true;
