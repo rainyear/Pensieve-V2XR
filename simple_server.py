@@ -8,6 +8,7 @@ AIGC_HOST = "http://192.168.0.112:7860"
 
 @application.route("/")
 def hello():
+    print(request.user_agent)
     return render_template('index.html')
 
 @application.route("/aigc")
