@@ -111,15 +111,17 @@ AFRAME.registerComponent("startgame-btn", {
     });
 
     _GAME_STATE.mask.addEventListener("animationcomplete", function () {
-      if (_GAME_STATE.maskZRotations.length <= 0) {
-        // End Game
-        _GAME_STATE.endGame();
-        console.log("Game Over");
-      } else {
-        // miss
-        console.log("miss");
-        _GAME_STATE.missedSound.components.sound.playSound();
-        _GAME_STATE.resetMask();
+      if (_GAME_STATE.isGameStart) {
+        if (_GAME_STATE.maskZRotations.length <= 0) {
+          // End Game
+          _GAME_STATE.endGame();
+          console.log("Game Over");
+        } else {
+          // miss
+          console.log("miss");
+          _GAME_STATE.missedSound.components.sound.playSound();
+          _GAME_STATE.resetMask();
+        }
       }
     });
   },
