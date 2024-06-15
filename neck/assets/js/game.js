@@ -27,8 +27,11 @@ const _GAME_STATE = (() => {
     maskInitPosition: new THREE.Vector3(0, 0, -4),
     maskZRotations: _ROTATIONS(),
     currentRotation: 0,
+    gameScore: 0,
+    gameScoreBoard: document.querySelector("#gameScore"),
     resetMask: function () {
       // reset mask
+      console.log("Reset object");
       this.currentRotation = this.maskZRotations.pop();
       this.mask.setAttribute("rotation", `0 0 ${Math.random() * 90}`);
       var pos = this.maskInitPosition;
@@ -57,6 +60,13 @@ const _GAME_STATE = (() => {
 
       this.maskZRotations = _ROTATIONS();
       this.isSuccess = {};
+
+      this.gameScoreBoard.setAttribute("visible", "true");
+      this.gameScoreBoard
+        .querySelector("a-text")
+        .setAttribute("value", `Score: ${this.gameScore}`);
+
+      this.gameScore = 0;
     },
     response: function (headRot) {
       console.log(headRot);
@@ -77,12 +87,27 @@ const _GAME_STATE = (() => {
   };
 })();
 
+_GAME_STATE.mask.addEventListener("click", (event) => {
+  _GAME_STATE.gameScore += 10;
+  console.log("Hit", _GAME_STATE.gameScore);
+  _GAME_STATE.successSound.components.sound.playSound();
+  if (_GAME_STATE.maskZRotations.length <= 0) {
+    // End Game
+    _GAME_STATE.endGame();
+    console.log("Game Over");
+  } else {
+    _GAME_STATE.resetMask();
+  }
+});
+
 AFRAME.registerComponent("startgame-btn", {
   init: function () {
     const sceneEl = this.el.sceneEl;
     this.el.addEventListener("click", () => {
       // Start Game
-      _GAME_STATE.startGame();
+      if (!_GAME_STATE.isGameStart) {
+        _GAME_STATE.startGame();
+      }
     });
 
     _GAME_STATE.mask.addEventListener("animationcomplete", function () {
@@ -91,6 +116,9 @@ AFRAME.registerComponent("startgame-btn", {
         _GAME_STATE.endGame();
         console.log("Game Over");
       } else {
+        // miss
+        console.log("miss");
+        _GAME_STATE.missedSound.components.sound.playSound();
         _GAME_STATE.resetMask();
       }
     });

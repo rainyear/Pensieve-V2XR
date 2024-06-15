@@ -2,7 +2,8 @@
 <html>
   <head>
     <title>Pinch Beat | V2XR</title>
-    <script src="/assets/js/aframe.min.js"></script>
+    <!-- <script src="/assets/js/aframe.1.4.2.min.js"></script> -->
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
     <script src="./assets/js/shader.js"></script>
 
@@ -28,6 +29,7 @@
       cursor="rayOrigin:xrselect;"
     >
       <a-assets>
+        <!-- <a-asset-item id="mask" src="./assets/models/mask.gltf"></a-asset-item> -->
         <audio
           id="success"
           src="./assets/audio/success.m4a"
@@ -49,9 +51,36 @@
       </a-assets>
 
       <a-entity environment="preset:dream" visible="true"></a-entity>
+      <!--
+      <a-entity
+        light="type: ambient; color: #FFF; intensity: 2.5"
+        position="0 1.6 0"
+      ></a-entity>
+      <a-entity
+        light="type: directional; intensity: 1.75; distance: 50; decay: 1; castShadow: true; color: #FFF"
+        position="0 1 .5"
+      ></a-entity>
+      -->
       <a-entity camera look-controls rotation-reader position="0 1.6 0">
+        <!-- <a-sphere
+          shadow="cast: true; receive: true"
+          radius="0.2"
+          segments-height="64"
+          segments-width="64"
+          scale="0.75 1 1"
+        ></a-sphere> -->
       </a-entity>
+      <!--
+      <a-entity
+        laser-controls="hand: right"
+        raycaster="objects: [clickable]"
+      ></a-entity>
+      <a-entity
+        laser-controls="hand: left"
+        raycaster="objects: [clickable]"
+      ></a-entity>
 
+      -->
       <a-box
         id="room"
         room
@@ -62,6 +91,15 @@
         material="shader:wall-shader;transparent: true;side:back;"
         visible="false"
       ></a-box>
+
+      <!-- 
+      <a-plane
+        height="5"
+        width="8"
+        position="0 2.5 -5.9"
+        material="shader:wall-shader; transparent: true;"
+      ></a-plane>
+      -->
 
       <a-entity
         id="model-mask"
@@ -78,17 +116,18 @@
           intensity="1.5"
         ></a-light>
         <a-dodecahedron radius="0.15" color="red"></a-dodecahedron>
+        <!--
+        <a-gltf-model
+          id="model-mask"
+          visible="true"
+          src="#mask"
+          scale="0.5 0.5 0.5"
+          position="-1 -.5 0"
+        ></a-gltf-model>
+      -->
       </a-entity>
 
       <a-entity rotation="-25 0 0" position="0 1.6 -0.5" control-panel>
-        <a-entity id="gameScore" visible="false">
-          <a-text
-            value="Score: 10"
-            width="1"
-            align="center"
-            position="0 0.1 0"
-          />
-        </a-entity>
         <a-plane
           color="green"
           startgame-btn
@@ -102,9 +141,9 @@
         <a-plane
           clickable
           color="black"
-          position="0 -0.07 0"
+          position="0 -0.05 0"
           width="0.15"
-          height="0.04"
+          height="0.02"
           onclick="changeEnv();"
         >
           <a-text
@@ -117,7 +156,7 @@
         </a-plane>
         <a-plane
           clickable
-          position="0 -0.11 0"
+          position="0 -0.073 0"
           width="0.15"
           height="0.02"
           color="black"
@@ -130,6 +169,29 @@
           />
         </a-plane>
       </a-entity>
+      <!-- <a-entity
+        visible="false"
+        wall="direction: right"
+        clickable
+        position="0 2 -4"
+        width="4"
+        height="2.5"
+        animation__click="property: position; to: 0 2 0.1; dur: 2000; easing: linear; startEvents: click"
+      >
+        <a-circle
+          radius="0.4"
+          scale="0.85 1 1"
+          position="0 -0.5 0.4"
+        ></a-circle>
+        <a-plane
+          clickable
+          width="4"
+          height="1.5"
+          rotation="5 0 0"
+          material="shader:wall-shader; transparent: true; "
+          shadow="cast: true; receive: true"
+        ></a-plane>
+      </a-entity> -->
       <a-entity sounds visible="false">
         <a-entity
           id="sound-bgm"
@@ -174,12 +236,13 @@
       var envIndex = 0;
 
       function changeEnv() {
+        var envs = _shuffle(envPresets);
         if (envIndex >= envPresets.length) {
           envIndex = 0;
         } else {
           envIndex++;
         }
-        var env = envPresets[envIndex];
+        var env = envs[envIndex];
 
         if ("neo" == env) {
           // use neo room
