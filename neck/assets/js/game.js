@@ -5,9 +5,17 @@ const _shuffle = (array) => {
   }
   return array;
 };
+const _randomColor = () => {
+  var r = Math.floor(Math.random() * 256);
+  var g = Math.floor(Math.random() * 256);
+  var b = Math.floor(Math.random() * 256);
+  return "rgb(" + r + "," + g + "," + b + ")";
+};
 const _ROTATIONS = () => _shuffle([0, 0, 45, 45, 45, 45, -45, -45, -45, -45]);
 const _GAME_STATE = (() => {
   return {
+    isEnterVR: false,
+    isPositionSet: false,
     isGameStart: false,
     isSuccess: {},
     BGM: document.querySelector("#sound-bgm"),
@@ -16,14 +24,21 @@ const _GAME_STATE = (() => {
     controlPanel: document.querySelector("[control-panel]"),
     camera: document.querySelector("[camera]"),
     mask: document.querySelector("#model-mask"),
-    maskInitPosition: "0 1.5 -4",
+    maskInitPosition: new THREE.Vector3(0, 0, -4),
     maskZRotations: _ROTATIONS(),
     currentRotation: 0,
     resetMask: function () {
       // reset mask
       this.currentRotation = this.maskZRotations.pop();
-      this.mask.setAttribute("position", this.maskInitPosition);
-      this.mask.setAttribute("rotation", `0 0 ${this.currentRotation}`);
+      this.mask.setAttribute("rotation", `0 0 ${Math.random() * 90}`);
+      var pos = this.maskInitPosition;
+      pos.x = (Math.random() - 0.5) * 2;
+      pos.z = -4;
+
+      this.mask.setAttribute("position", pos);
+      this.mask
+        .querySelector("a-dodecahedron")
+        .setAttribute("color", _randomColor());
       this.mask.setAttribute("visible", true);
       // start animation
       this.mask.emit("gametick", null, false);
@@ -85,16 +100,25 @@ AFRAME.registerComponent("rotation-reader", {
   init: function () {
     this.initialRotation = this.el.object3D.rotation.clone();
     this.initialPosition = this.el.object3D.position.clone();
-
-    console.log(
-      "init rotation and position: ",
-      this.initialRotation,
-      this.initialPosition
-    );
+    // var position = new THREE.Vector3();
+    // this.cameraWorldPosition = this.el.object3D.getWorldPosition(position);
   },
   tick: function () {
     const maskPos = _GAME_STATE.mask.getAttribute("position");
-    // console.log(maskPos.z);
+
+    if (_GAME_STATE.isEnterVR && !_GAME_STATE.isPositionSet) {
+      var position = new THREE.Vector3();
+      this.cameraWorldPosition = this.el.object3D.getWorldPosition(position);
+      console.log("Set position", this.cameraWorldPosition);
+      if (this.cameraWorldPosition.y > 0) {
+        _GAME_STATE.controlPanel.object3D.position.y =
+          this.cameraWorldPosition.y;
+        _GAME_STATE.maskInitPosition.y = this.cameraWorldPosition.y;
+        _GAME_STATE.isPositionSet = true;
+      }
+    }
+
+    /*
     if (
       _GAME_STATE.isGameStart &&
       maskPos.z > -0.05 &&
@@ -112,31 +136,6 @@ AFRAME.registerComponent("rotation-reader", {
       }
       _GAME_STATE.isSuccess[_GAME_STATE.maskZRotations.length] = isCorrect;
     }
+      */
   },
 });
-
-/*
-      AFRAME.registerComponent("wall", {
-        schema: {
-          direction: { type: "string", default: "up" },
-        },
-        init: function () {
-          const wall = this.el.querySelector("a-plane");
-          const circle = this.el.querySelector("a-circle");
-          wall.getObject3D("mesh").renderOrder = 2;
-          circle.getObject3D("mesh").material.colorWrite = false;
-          circle.getObject3D("mesh").renderOrder = 1;
-
-          switch (this.data.direction) {
-            case "up":
-              break;
-            case "left":
-              circle.setAttribute("rotation", "0 0 45");
-              break;
-            case "right":
-              circle.setAttribute("rotation", "0 0 -45");
-              break;
-          }
-        },
-      });
-      */

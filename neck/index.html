@@ -22,39 +22,14 @@
       content="upgrade-insecure-requests"
     />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <script>
-      const envPresets = [
-        "contact",
-        "egypt",
-        "checkerboard",
-        "forest",
-        "goaland",
-        "yavapai",
-        "goldmine",
-        "threetowers",
-        "poison",
-        "arches",
-        "tron",
-        "japan",
-        "dream",
-        "volcano",
-        "starry",
-        "osiris",
-        "moon",
-      ];
-      function changeEnv() {
-        var envs = _shuffle(envPresets);
-        console.log("asdfs");
-        document
-          .querySelector("[environment]")
-          .setAttribute("environment", { preset: envs[0] });
-      }
-    </script>
   </head>
   <body>
-    <a-scene loading-screen="dotsColor: red; backgroundColor: black">
+    <a-scene
+      loading-screen="dotsColor: red; backgroundColor: black"
+      cursor="rayOrigin:xrselect;"
+    >
       <a-assets>
-        <a-asset-item id="mask" src="./assets/models/mask.gltf"></a-asset-item>
+        <!-- <a-asset-item id="mask" src="./assets/models/mask.gltf"></a-asset-item> -->
         <audio
           id="success"
           src="./assets/audio/success.m4a"
@@ -75,8 +50,7 @@
         ></audio>
       </a-assets>
 
-      <!-- <a-sky src="#sky" hide-on-enter-ar></a-sky> -->
-      <!-- <a-entity environment="preset:dream" hide-on-enter-ar></a-entity> -->
+      <a-entity environment="preset:dream" visible="true"></a-entity>
       <!--
       <a-entity
         light="type: ambient; color: #FFF; intensity: 2.5"
@@ -87,15 +61,7 @@
         position="0 1 .5"
       ></a-entity>
       -->
-      <a-entity
-        camera
-        look-controls
-        wasd-controls
-        cursor="rayOrigin: mouse"
-        raycaster="objects: [clickable]"
-        position="0 1.6 0"
-        rotation-reader
-      >
+      <a-entity camera look-controls rotation-reader position="0 1.6 0">
         <!-- <a-sphere
           shadow="cast: true; receive: true"
           radius="0.2"
@@ -104,6 +70,7 @@
           scale="0.75 1 1"
         ></a-sphere> -->
       </a-entity>
+      <!--
       <a-entity
         laser-controls="hand: right"
         raycaster="objects: [clickable]"
@@ -113,15 +80,16 @@
         raycaster="objects: [clickable]"
       ></a-entity>
 
+      -->
       <a-box
+        id="room"
         room
-        hide-on-enter-ar
-        visible="true"
         width="8"
         height="5"
         depth="12"
         position="0 2.5 0"
         material="shader:wall-shader;transparent: true;side:back;"
+        visible="false"
       ></a-box>
 
       <!-- 
@@ -138,7 +106,8 @@
         position="0 1.5 -4"
         rotation="0 0 0"
         visible="false"
-        animation__click="property: position; to: 0 1.5 0; dur: 2500; easing: linear; startEvents: gametick"
+        animation="property: position; to: 0 1.5 0; dur: 2500; easing: linear; startEvents: gametick"
+        clickable
       >
         <a-light
           type="point"
@@ -146,6 +115,8 @@
           position="0 0.5 0.5"
           intensity="1.5"
         ></a-light>
+        <a-dodecahedron radius="0.15" color="red"></a-dodecahedron>
+        <!--
         <a-gltf-model
           id="model-mask"
           visible="true"
@@ -153,11 +124,12 @@
           scale="0.5 0.5 0.5"
           position="-1 -.5 0"
         ></a-gltf-model>
+      -->
       </a-entity>
 
-      <a-entity rotation="-25 0 0" position="0 1.6 -0.45" control-panel>
+      <a-entity rotation="-25 0 0" position="0 1.6 -0.5" control-panel>
         <a-plane
-          color="black"
+          color="green"
           startgame-btn
           visible="true"
           clickable
@@ -188,7 +160,12 @@
           height="0.02"
           color="black"
         >
-          <a-text value="By: V2XR" width="0.2" color="white" align="center" />
+          <a-text
+            value="Credit: V2XR"
+            width="0.2"
+            color="white"
+            align="center"
+          />
         </a-plane>
       </a-entity>
       <!-- <a-entity
@@ -225,5 +202,51 @@
     </a-scene>
 
     <script src="./assets/js/game.js"></script>
+    <script>
+      var scene = document.querySelector("a-scene");
+      scene.addEventListener("enter-vr", (event) => {
+        console.log("Enter VR");
+        _GAME_STATE.isEnterVR = true;
+      });
+    </script>
+    <script>
+      const envPresets = [
+        "contact",
+        "egypt",
+        "checkerboard",
+        "forest",
+        "goaland",
+        "yavapai",
+        "goldmine",
+        "threetowers",
+        "poison",
+        "arches",
+        "tron",
+        "japan",
+        "dream",
+        "volcano",
+        "starry",
+        "osiris",
+        "moon",
+        "neo",
+      ];
+      const environment = document.querySelector("[environment]");
+      const room = document.querySelector("#room");
+
+      function changeEnv() {
+        var envs = _shuffle(envPresets);
+        var env = envs[0];
+
+        if ("neo" == env) {
+          // use neo room
+          room.setAttribute("visible", "true");
+          environment.setAttribute("visible", "false");
+        } else {
+          room.setAttribute("visible", "false");
+          environment.setAttribute("visible", "true");
+          environment.setAttribute("environment", { preset: envs[0] });
+        }
+      }
+    </script>
   </body>
 </html>
